@@ -10,46 +10,51 @@ import {
   CheckCircle2, 
   Clock, 
   Workflow, 
-  DollarSign, 
+  QrCode, 
   ExternalLink,
   Store,
   MessageSquare,
   Package,
-  HeartPulse
+  HeartPulse,
+  Phone,
+  Wallet
 } from 'lucide-react';
 import { Language, TabType } from '../../types';
-import { FUNDING_PILLARS, FINANCIAL_PROJECTIONS } from '../../data/mockData';
 
 interface OverviewTabProps {
   lang: Language;
   onSelectTab: (tab: TabType) => void;
   onOpenPowerBI: () => void;
   onOpenPharmasystModal: () => void;
+  onOpenInstaPayModal?: () => void;
 }
 
 export const OverviewTab: React.FC<OverviewTabProps> = ({
   lang,
   onSelectTab,
   onOpenPowerBI,
-  onOpenPharmasystModal
+  onOpenPharmasystModal,
+  onOpenInstaPayModal
 }) => {
   const isAr = lang === 'ar';
+  const instaPayUrl = 'https://ipn.eg/S/haithamelbendary/instapay/0xKgNF';
+  const hotlinePhone = '01200400094';
 
   const systemsMatrix = [
     {
       id: 'sys-corp',
-      name: isAr ? 'موقع الشركة والبوابة الرقمية' : 'Corporate Website & Public Portal',
-      desc: isAr ? 'دليل الـ ١٧ فرعاً، شبكة شركات التأمين، والمقالات الطبية' : 'Branch locator, insurance directory & health blog',
+      name: isAr ? 'البوابة الرئيسية ودليل الفروع' : 'Landing Page & Branch Directory',
+      desc: isAr ? 'دليل الـ ١٥ فرعاً، خريطة الفروع التفاعلية، والتأمين الطبي' : '15 branches locator, interactive map & clinical services',
       status: 'live',
       statusText: isAr ? 'يعمل بنجاح (Live)' : 'Live & Active',
       targetTab: 'corp' as TabType,
-      tech: 'Next.js • Tailwind • Vercel • Strapi',
+      tech: 'Next.js • Tailwind • Vercel • Google Maps',
       icon: Store,
       color: 'text-blue-600 bg-blue-50 dark:bg-blue-950/40 border-blue-200 dark:border-blue-800'
     },
     {
       id: 'sys-ecom',
-      name: isAr ? 'المتجر الإلكتروني وتوصيل الروشتات B2C' : 'B2C E-Commerce & Rx Delivery Engine',
+      name: isAr ? 'المتجر الإلكتروني وصرف الروشتات B2C' : 'B2C E-Commerce & Rx Delivery Engine',
       desc: isAr ? 'رفع الروشتة بالذكاء الاصطناعي، كتالوج المنتجات، وتوصيل الدلتا والقاهرة' : 'AI prescription scanner, catalog & Delta/Cairo delivery',
       status: 'live',
       statusText: isAr ? 'يعمل بنجاح (Live)' : 'Live & Active',
@@ -71,12 +76,12 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
     },
     {
       id: 'sys-omni',
-      name: isAr ? 'مركز خدمة العملاء الموحد (SOLA / Chatwoot)' : 'Omni-Channel Customer Center (SOLA)',
-      desc: isAr ? 'توحيد واتساب الرسمي، فيسبوك، إنستجرام، وروبوتات المحادثة الـ ٦' : 'WhatsApp Cloud API, Meta channels, collision detection',
+      name: isAr ? 'مركز خدمة العملاء الموحد (SOLA)' : 'Omni-Channel Customer Center (SOLA)',
+      desc: isAr ? 'توحيد واتساب الرسمي (01200400094)، فيسبوك، ومنع التضارب' : 'WhatsApp Cloud API (01200400094), Meta channels, collision detection',
       status: 'live',
-      statusText: isAr ? 'يعمل بنجاح (Live Beta)' : 'Live Beta',
+      statusText: isAr ? 'يعمل بنجاح (01200400094)' : 'Live (01200400094)',
       targetTab: 'omnichannel' as TabType,
-      tech: 'Meta Cloud API • Chatwoot Engine • Socket.io',
+      tech: 'Meta Cloud API • WhatsApp BSP • Socket.io',
       icon: MessageSquare,
       color: 'text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800'
     },
@@ -84,9 +89,9 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
       id: 'sys-pharma',
       name: isAr ? 'مصنع فارما كود للأدوية التخصصية' : 'Pharma Code Specialty Manufacturing',
       desc: isAr ? 'تصنيع أدوية الأورام، الحقن المجهري (ICSI)، والأدوية الحيوية' : 'Sister company: Biologics, Oncology & ICSI medications',
-      status: 'scaling',
-      statusText: isAr ? 'قيد التوسع ($2.0M)' : 'Scaling ($2.0M)',
-      targetTab: 'investment' as TabType,
+      status: 'active',
+      statusText: isAr ? 'توريد حصري للمجموعة' : 'Captive Supply Chain',
+      targetTab: 'corp' as TabType,
       tech: 'GMP Certified • Captive Supply Chain',
       icon: HeartPulse,
       color: 'text-amber-600 bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-800'
@@ -203,7 +208,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
               <ul className="text-xs space-y-1.5 text-slate-600 dark:text-slate-300">
                 <li className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                  <span>WhatsApp Cloud API (+20 01200400089)</span>
+                  <span>WhatsApp Cloud API (+20 01200400094)</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
@@ -334,75 +339,107 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
         </div>
       </div>
 
-      {/* $8M Funding Pillars with Proportional Bars */}
-      <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-4 border-b border-slate-100 dark:border-slate-800">
+      {/* Official InstaPay & 24/7 Hotline Gateway */}
+      <div className="bg-gradient-to-br from-purple-900 via-indigo-950 to-slate-900 text-white rounded-3xl p-6 sm:p-8 border border-purple-800/50 shadow-xl">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-6 border-b border-white/10">
           <div>
             <div className="flex items-center gap-2">
-              <DollarSign className="w-5 h-5 text-amber-500" />
-              <h2 className="text-lg font-bold text-slate-900 dark:text-white">
-                {isAr ? 'توزيع جولة الاستثمار: ٨ ملايين دولار عبر ٤ محاور' : 'The $8M Raise Across Four Strategic Pillars'}
+              <QrCode className="w-5 h-5 text-pink-400" />
+              <h2 className="text-lg font-bold text-white">
+                {isAr ? 'الدفع الإلكتروني المعتمد: إنستاباي والمحافظ الرقمية' : 'Official Digital Payment: InstaPay IPN & Wallets'}
               </h2>
             </div>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <p className="text-xs text-purple-200 mt-1">
               {isAr
-                ? 'استخدام الأموال للتحول إلى مجموعة دوائية متكاملة رأسياً (Retail + Manufacturing + E-Commerce)'
-                : 'Targeted capital allocation driving the shift to a vertically integrated pharmaceutical group'}
+                ? 'الحساب الرسمي المعتمد لصيدليات البنداري - شبكة المدفوعات اللحظية IPN'
+                : 'Verified official account for El-Bendary Pharmacies - Instant Payment Network IPN'}
             </p>
           </div>
-          <button
-            onClick={() => onSelectTab('investment')}
-            className="text-xs font-bold text-red-600 hover:text-red-700 flex items-center gap-1"
-          >
-            <span>{isAr ? 'عرض الملف الاستثماري الكامل' : 'Open Pitch Deck Room'}</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </button>
+
+          <div className="flex items-center gap-2">
+            <a
+              href={instaPayUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-2 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-md"
+            >
+              <span>{isAr ? '🔗 رابط إنستاباي المباشر' : '🔗 Direct InstaPay Link'}</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </a>
+
+            {onOpenInstaPayModal && (
+              <button
+                onClick={onOpenInstaPayModal}
+                className="px-4 py-2 bg-white text-purple-900 hover:bg-purple-50 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-md"
+              >
+                <QrCode className="w-3.5 h-3.5" />
+                <span>{isAr ? 'عرض QR الدفع' : 'Show QR'}</span>
+              </button>
+            )}
+          </div>
         </div>
 
-        {/* Proportional Stacked Bar */}
-        <div className="mt-6">
-          <div className="w-full h-5 rounded-xl overflow-hidden flex bg-slate-100 dark:bg-slate-800 shadow-inner">
-            {FUNDING_PILLARS.map((pillar) => (
-              <div
-                key={pillar.id}
-                style={{ width: `${pillar.percentage}%`, backgroundColor: pillar.color }}
-                className="h-full relative group transition-all duration-300 hover:opacity-90"
-                title={`${pillar.title}: ${pillar.amount} (${pillar.percentage}%)`}
-              />
-            ))}
+        {/* Payment & Contact Content */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-6 items-center">
+          
+          <div className="p-4 bg-white/10 backdrop-blur-md rounded-2xl border border-white/15 space-y-2">
+            <div className="flex items-center gap-2 text-pink-300 text-xs font-bold">
+              <Wallet className="w-4 h-4" />
+              <span>{isAr ? 'الحساب المعتمد' : 'Verified IPN Account'}</span>
+            </div>
+            <div className="font-bold text-sm text-white">
+              El-Bendary Pharmacies
+            </div>
+            <div className="text-xs text-purple-200">
+              {isAr ? 'صيدليات البنداري (الحساب الرسمي المعتمد)' : 'Official Pharmacy Chain IPN Account'}
+            </div>
+            <div className="text-[11px] font-mono text-purple-300 pt-1">
+              01200400094 | elbendary@instapay
+            </div>
           </div>
 
-          {/* Pillars Cards Breakdown */}
-          <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {FUNDING_PILLARS.map((pillar) => (
-              <div
-                key={pillar.id}
-                className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 flex flex-col justify-between"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span
-                      className="w-3 h-3 rounded-full"
-                      style={{ backgroundColor: pillar.color }}
-                    />
-                    <span className="text-base font-black text-slate-900 dark:text-white">
-                      {pillar.amount}
-                    </span>
-                  </div>
-                  <h4 className="text-xs font-bold text-slate-900 dark:text-white">
-                    {isAr ? pillar.titleAr : pillar.title}
-                  </h4>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1.5 leading-relaxed">
-                    {isAr ? pillar.descriptionAr : pillar.description}
-                  </p>
-                </div>
-                <div className="mt-3 pt-2 border-t border-slate-200 dark:border-slate-700 flex items-center justify-between text-[11px]">
-                  <span className="text-slate-400">{isAr ? 'نسبة التخصيص:' : 'Allocation:'}</span>
-                  <span className="font-bold text-slate-700 dark:text-slate-300">{pillar.percentage}%</span>
-                </div>
-              </div>
-            ))}
+          <div className="p-4 bg-white/10 backdrop-blur-md rounded-2xl border border-white/15 space-y-2">
+            <div className="flex items-center gap-2 text-emerald-300 text-xs font-bold">
+              <Phone className="w-4 h-4" />
+              <span>{isAr ? 'الرقم الموحد للطلبات والتحويل' : 'Unified Orders & Wallet Number'}</span>
+            </div>
+            <a
+              href={`tel:${hotlinePhone}`}
+              className="font-mono text-lg font-black text-white hover:text-emerald-300 block tracking-wider"
+            >
+              {hotlinePhone}
+            </a>
+            <div className="text-xs text-purple-200">
+              {isAr ? 'فودافون كاش • أورانج كاش • اتصالات • وي' : 'Vodafone Cash • Orange • Etisalat • WE'}
+            </div>
           </div>
+
+          <div className="p-4 bg-white/10 backdrop-blur-md rounded-2xl border border-white/15 flex items-center justify-between gap-3">
+            <div className="space-y-1">
+              <div className="text-xs font-bold text-white">
+                {isAr ? 'امسح الرمز للدفع الفوري' : 'Scan & Pay Instantly'}
+              </div>
+              <p className="text-[11px] text-purple-200">
+                {isAr ? 'يقبل تطبيق إنستاباي وكاميرا الهاتف' : 'Accepts InstaPay app & camera'}
+              </p>
+              <button
+                onClick={() => onSelectTab('corp')}
+                className="text-[11px] font-bold text-pink-300 hover:underline flex items-center gap-1 mt-1"
+              >
+                <span>{isAr ? 'انتقل إلى الصفحة الرئيسية' : 'Visit Landing Page'}</span>
+                <ArrowRight className="w-3 h-3" />
+              </button>
+            </div>
+
+            <div className="bg-white p-1.5 rounded-xl shrink-0 shadow-md">
+              <img
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=90x90&margin=1&data=${encodeURIComponent(instaPayUrl)}`}
+                alt="InstaPay QR Code"
+                className="w-18 h-18 object-contain rounded-lg"
+              />
+            </div>
+          </div>
+
         </div>
       </div>
 

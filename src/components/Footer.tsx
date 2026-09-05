@@ -8,15 +8,18 @@ interface FooterProps {
   onSelectTab: (tab: TabType) => void;
   onOpenRxModal: () => void;
   onOpenPharmasystModal: () => void;
+  onOpenInstaPayModal?: () => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({
   lang,
   onSelectTab,
   onOpenRxModal,
-  onOpenPharmasystModal
+  onOpenPharmasystModal,
+  onOpenInstaPayModal
 }) => {
   const isAr = lang === 'ar';
+  const instaPayUrl = 'https://ipn.eg/S/haithamelbendary/instapay/0xKgNF';
 
   return (
     <footer className="bg-slate-900 text-slate-300 border-t border-slate-800 transition-colors">
@@ -28,8 +31,8 @@ export const Footer: React.FC<FooterProps> = ({
             <Logo size="lg" showSubtitle={true} dark={true} />
             <p className="text-xs text-slate-400 leading-relaxed">
               {isAr
-                ? 'مجموعة صيدليات البنداري تأسست عام ١٩٨٠. أكثر من ٤٦ عاماً من الريادة في خدمة صحة الأسرة المصرية عبر ١٧ فرعاً بالدلتا والقاهرة وتوريد كبرى المناقصات الحكومية والمؤسسية.'
-                : 'Founded in 1980, El-Bendary Pharmacies Group has served Egyptian healthcare for over 46 years across 17 branches and 30+ institutional tenders.'}
+                ? 'مجموعة صيدليات البنداري تأسست عام ١٩٨٠. أكثر من ٤٦ عاماً من الريادة في خدمة صحة الأسرة المصرية عبر ١٥ فرعاً مجهزاً بالدلتا والقاهرة وتوريد كبرى المناقصات الحكومية والمؤسسية.'
+                : 'Founded in 1980, El-Bendary Pharmacies Group has served Egyptian healthcare for over 46 years across 15 certified branches and 30+ institutional tenders.'}
             </p>
             <div className="flex items-center gap-2 text-xs text-emerald-400">
               <ShieldCheck className="w-4 h-4" />
@@ -48,7 +51,7 @@ export const Footer: React.FC<FooterProps> = ({
                   onClick={() => onSelectTab('overview')}
                   className="hover:text-red-400 transition"
                 >
-                  {isAr ? '• الهيكل العام والـ ٥ منظومات' : '• Architecture & 5 Systems'}
+                  {isAr ? '• الهيكل العام والمنظومات' : '• Executive Architecture'}
                 </button>
               </li>
               <li>
@@ -56,7 +59,7 @@ export const Footer: React.FC<FooterProps> = ({
                   onClick={() => onSelectTab('corp')}
                   className="hover:text-red-400 transition"
                 >
-                  {isAr ? '• دليل الفروع والتأمين الصحي' : '• Branch Locator & Insurance'}
+                  {isAr ? '• الرئيسية ودليل الفروع' : '• Landing Page & Branches'}
                 </button>
               </li>
               <li>
@@ -84,12 +87,24 @@ export const Footer: React.FC<FooterProps> = ({
                 </button>
               </li>
               <li>
-                <button
-                  onClick={() => onSelectTab('investment')}
-                  className="hover:text-red-400 transition text-amber-400 font-semibold"
-                >
-                  {isAr ? '• ملف الاستثمار ($8M Raise)' : '• Investor Pitch Room ($8M)'}
-                </button>
+                {onOpenInstaPayModal ? (
+                  <button
+                    onClick={onOpenInstaPayModal}
+                    className="hover:text-purple-300 transition text-purple-400 font-semibold flex items-center gap-1"
+                  >
+                    <span>{isAr ? '• الدفع الإلكتروني عبر إنستاباي' : '• InstaPay QR Payment'}</span>
+                  </button>
+                ) : (
+                  <a
+                    href={instaPayUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-purple-300 transition text-purple-400 font-semibold flex items-center gap-1"
+                  >
+                    <span>{isAr ? '• رابط الدفع إنستاباي' : '• InstaPay Payment Link'}</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
+                )}
               </li>
             </ul>
           </div>
@@ -136,8 +151,8 @@ export const Footer: React.FC<FooterProps> = ({
               </div>
               <div className="flex items-center gap-2 text-slate-400">
                 <Phone className="w-4 h-4 text-emerald-500 shrink-0" />
-                <a href="tel:01200400089" className="hover:text-white font-mono font-bold">
-                  01200400089
+                <a href="tel:01200400094" className="hover:text-white font-mono font-bold">
+                  01200400094
                 </a>
               </div>
               <div className="flex items-center gap-2 text-slate-400">

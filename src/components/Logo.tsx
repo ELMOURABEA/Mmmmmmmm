@@ -16,104 +16,159 @@ export const Logo: React.FC<LogoProps> = ({
   dark = false
 }) => {
   const sizeMap = {
-    sm: { h: 'h-9', iconSize: 34, textScale: 'text-sm' },
-    md: { h: 'h-12', iconSize: 46, textScale: 'text-base' },
-    lg: { h: 'h-16', iconSize: 62, textScale: 'text-xl' },
-    xl: { h: 'h-24', iconSize: 92, textScale: 'text-2xl' },
+    sm: { h: 'h-10', iconWidth: 100, textScale: 'text-sm' },
+    md: { h: 'h-13', iconWidth: 130, textScale: 'text-base' },
+    lg: { h: 'h-18', iconWidth: 170, textScale: 'text-xl' },
+    xl: { h: 'h-24', iconWidth: 220, textScale: 'text-2xl' },
   };
 
   const current = sizeMap[size];
 
-  // Authentic SVG rendering of the El-Bendary logo from the user's reference photo
+  // Authentic vector recreation of the official El-Bendary logo (BENDAR since 1980)
+  // Direct match to official brand assets & store facade
   const LogoEmblem = (
     <svg
-      viewBox="0 0 400 360"
+      viewBox="0 0 540 380"
       className={`${current.h} w-auto transition-transform duration-200 group-hover:scale-105 shrink-0`}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      aria-label="صيدليات البنداري - El-Bendary Pharmacies Since 1980"
+      aria-label="صيدليات البنداري - BENDAR since 1980"
     >
-      {/* Caduceus snake wand / Bowl of Hygieia serpent motif on left */}
-      <path
-        d="M60 115 C 30 115, 20 145, 35 170 C 50 195, 110 180, 100 130 C 90 90, 45 95, 30 140 C 20 175, 45 220, 80 230 C 130 240, 190 220, 200 200 C 210 180, 175 160, 120 165 C 70 170, 60 215, 75 250 C 90 280, 115 310, 100 325 C 85 340, 60 330, 50 310"
-        stroke="#D32F2F"
-        strokeWidth="15"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      {/* Snake head with tongue */}
-      <circle cx="85" cy="122" r="9" fill="#D32F2F" />
-      <path d="M92 118 Q 102 112 110 116" stroke="#D32F2F" strokeWidth="4" strokeLinecap="round" />
+      {/* 1. Left: Caduceus Serpent Chalice / Hygieia Snake Motif forming "B" */}
+      <g id="hygieia-snake">
+        {/* Snake chalice upper loop */}
+        <path
+          d="M 130 115 
+             C 70 85, 25 110, 28 155 
+             C 32 195, 80 205, 125 190 
+             C 160 178, 205 160, 240 162
+             C 275 164, 260 190, 205 200
+             C 150 210, 85 210, 65 240
+             C 45 270, 75 320, 125 330
+             C 145 334, 150 315, 130 310
+             C 95 300, 78 275, 88 250
+             C 98 225, 150 220, 195 212
+             C 255 200, 285 155, 235 145
+             C 195 137, 145 160, 110 172
+             C 75 184, 52 172, 48 150
+             C 44 125, 75 105, 120 125 Z"
+          fill="#D3242B"
+        />
+        {/* Snake Head & Eye */}
+        <ellipse cx="115" cy="155" rx="14" ry="10" transform="rotate(-20 115 155)" fill="#D3242B" />
+        <circle cx="118" cy="154" r="2.5" fill="#FFFFFF" />
+        {/* Chalice Base Stem */}
+        <path
+          d="M 100 230 L 100 320 Q 100 330 115 330 Q 85 330 85 320 L 85 230 Z"
+          fill="#D3242B"
+        />
+        {/* Chalice Pedestal Stand */}
+        <path
+          d="M 70 330 C 85 320, 115 320, 130 330 C 135 334, 65 334, 70 330 Z"
+          fill="#D3242B"
+        />
+      </g>
 
-      {/* Mortar pestle handle slanted into bowl */}
-      <path
-        d="M230 60 L 255 68 L 290 165 L 260 165 Z"
-        fill="#374151"
-        stroke="#1F2937"
-        strokeWidth="3"
-        rx="6"
-      />
+      {/* 2. Right: Mortar & Herbal Elements */}
+      <g id="mortar-and-leaves">
+        {/* Dark Charcoal Pestle slanted into bowl */}
+        <path
+          d="M 305 60 
+             C 315 58, 335 62, 332 78
+             L 370 175
+             L 335 175
+             L 285 75
+             C 282 62, 295 58, 305 60 Z"
+          fill="#2B2D31"
+          stroke="#1F2023"
+          strokeWidth="2"
+        />
+        {/* Pestle Top Highlight */}
+        <path
+          d="M 288 72 C 300 64, 325 68, 330 76"
+          stroke="#FFFFFF"
+          strokeWidth="3.5"
+          strokeLinecap="round"
+        />
 
-      {/* Medicinal herbal leaves sprouting inside bowl */}
-      {/* Left green leaf */}
-      <path
-        d="M280 165 C 270 120, 275 60, 315 25 C 320 65, 325 125, 310 165 Z"
-        fill="#15803D"
-      />
-      {/* Right green leaf */}
-      <path
-        d="M325 165 C 325 110, 335 55, 355 35 C 355 80, 350 125, 340 165 Z"
-        fill="#16A34A"
-      />
-      {/* Green pharmaceutical droplets / tablets above mortar */}
-      <circle cx="315" cy="65" r="14" fill="#15803D" />
-      <circle cx="305" cy="35" r="7" fill="#22C55E" />
-      <circle cx="330" cy="38" r="8" fill="#16A34A" />
+        {/* Green Medicinal Leaves inside Mortar */}
+        {/* Leaf 1: Center-left slender leaf */}
+        <path
+          d="M 370 170 
+             C 365 110, 360 50, 410 22 
+             C 415 65, 415 120, 395 170 Z"
+          fill="#1B7A38"
+        />
+        {/* Leaf 2: Right leaf */}
+        <path
+          d="M 398 170 
+             C 408 120, 420 70, 452 40 
+             C 455 85, 445 130, 422 170 Z"
+          fill="#2FA84F"
+        />
+        
+        {/* 3 Green Pharmaceutical / Herbal Essence Droplets */}
+        <circle cx="395" cy="50" r="15" fill="#1B7A38" />
+        <circle cx="430" cy="46" r="10" fill="#2FA84F" />
+        <circle cx="398" cy="18" r="8" fill="#44C268" />
 
-      {/* Red Mortar bowl with dynamic curvature */}
-      <path
-        d="M225 145 C 210 145, 230 185, 260 190 C 330 200, 380 185, 375 140 C 370 130, 340 145, 280 150 C 245 152, 230 145, 225 145 Z"
-        fill="#D32F2F"
-      />
-      <path
-        d="M210 160 C 240 230, 270 310, 320 330 C 370 315, 390 200, 385 160 C 385 190, 365 295, 315 310 C 265 295, 235 220, 210 160 Z"
-        fill="#C62828"
-      />
+        {/* Dynamic Red Mortar Bowl sweeps around and cradles the text */}
+        <path
+          d="M 280 145 
+             C 305 175, 420 185, 480 140 
+             C 495 130, 502 145, 492 165 
+             C 475 200, 420 205, 345 190 
+             C 300 180, 275 160, 280 145 Z"
+          fill="#D3242B"
+        />
+        <path
+          d="M 488 155
+             C 515 210, 495 285, 435 315
+             C 380 340, 290 330, 240 315
+             C 230 312, 235 304, 248 307
+             C 300 320, 385 325, 430 295
+             C 480 260, 490 200, 475 160 Z"
+          fill="#D3242B"
+        />
+      </g>
 
-      {/* Arabic Script "صيدليات البنداري" inside the logo contour */}
+      {/* 3. Center Text: Authentic typography matching uploaded brand logo */}
+      {/* Arabic Title: "صيدليات البنداري" in Red */}
       <text
-        x="365"
-        y="235"
+        x="475"
+        y="238"
         textAnchor="end"
-        fill="#D32F2F"
-        fontSize="34"
-        fontFamily="'Tajawal', sans-serif"
+        fill="#D3242B"
+        fontSize="44"
+        fontFamily="'Tajawal', 'Segoe UI', sans-serif"
         fontWeight="800"
+        letterSpacing="0.5"
       >
         صيدليات البنداري
       </text>
 
-      {/* English BENDARY typography in black artistic brush */}
+      {/* English Brand: "BENDAR" in Black Brush Style */}
       <text
-        x="100"
-        y="305"
-        fill="#111827"
-        fontSize="52"
-        fontFamily="'Plus Jakarta Sans', sans-serif"
+        x="135"
+        y="308"
+        fill="#141619"
+        fontSize="64"
+        fontFamily="'Plus Jakarta Sans', Impact, sans-serif"
         fontWeight="900"
-        letterSpacing="6"
+        letterSpacing="3"
       >
-        BENDARY
+        BENDAR
       </text>
 
-      {/* "since 1980" heritage tag line */}
+      {/* Heritage Tag: "since 1980" in Black */}
       <text
-        x="110"
-        y="342"
-        fill="#1F2937"
-        fontSize="24"
-        fontFamily="'Plus Jakarta Sans', sans-serif"
-        fontWeight="700"
+        x="145"
+        y="348"
+        fill="#141619"
+        fontSize="30"
+        fontFamily="'Plus Jakarta Sans', system-ui, sans-serif"
+        fontWeight="800"
+        letterSpacing="1"
       >
         since 1980
       </text>

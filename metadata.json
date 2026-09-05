@@ -1,6 +1,6 @@
 {
   "name": "El-Bendary Pharmacies Group",
-  "description": "Unified healthcare and pharmacy platform featuring corporate landing page, branch operations ERP, e-commerce catalog, Rx upload, omni-channel customer center, and investment dashboard.",
+  "description": "Unified healthcare and pharmacy platform for El-Bendary Pharmacies (since 1980). Featuring premier corporate landing page, branch operations GIS map, e-commerce catalog, Rx upload, InstaPay QR payments, verified customer reviews, and customer accounts (01200400094).",
   "requestFramePermissions": ["geolocation"],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

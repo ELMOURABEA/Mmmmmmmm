@@ -19,9 +19,12 @@ import {
   ExternalLink,
   ChevronRight,
   TrendingUp,
-  PackageCheck
+  PackageCheck,
+  MapPin,
+  List
 } from 'lucide-react';
 import { Branch, Product, Language, UserRole } from '../../types';
+import { BranchMap } from '../BranchMap';
 
 interface BranchOpsTabProps {
   lang: Language;
@@ -48,6 +51,7 @@ export const BranchOpsTab: React.FC<BranchOpsTabProps> = ({
 }) => {
   const [selectedBranchId, setSelectedBranchId] = useState('b-tanta-main');
   const [isSyncing, setIsSyncing] = useState(false);
+  const [viewMode, setViewMode] = useState<'table' | 'map'>('table');
 
   const isAr = lang === 'ar';
 
@@ -223,94 +227,131 @@ export const BranchOpsTab: React.FC<BranchOpsTabProps> = ({
 
       </div>
 
-      {/* 17 Branches Live Operations Table */}
+      {/* Branches Live Operations & GIS Map */}
       <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-slate-100 dark:border-slate-800">
           <div>
             <div className="flex items-center gap-2">
               <Building2 className="w-5 h-5 text-red-600" />
               <h2 className="text-lg font-bold text-slate-900 dark:text-white">
-                {isAr ? 'شبكة الفروع الـ ١٧: المزامنة ونقاط البيع اليومية' : '17 Retail Branches: Live POS & Inventory Sync'}
+                {isAr ? 'شبكة الفروع: المزامنة، نقاط البيع والخريطة الجغرافية' : 'Branch Network: POS Sync & GIS Operations'}
               </h2>
             </div>
             <p className="text-xs text-slate-500 mt-0.5">
               {isAr
-                ? 'متابعة حية لمبيعات كل فرع وصيدلي الوردية وحالة الاتصال بقاعدة بيانات Pharmasyst'
-                : 'Real-time sales, active duty pharmacist, and local database sync across all 17 branches'}
+                ? 'متابعة حية لمبيعات الفروع ومواقعها الجغرافية وصيدلي الوردية وحالة الربط بسيرفر Pharmasyst'
+                : 'Real-time sales, GIS locations, active duty pharmacist, and local database sync across all branches'}
             </p>
           </div>
 
           <div className="flex items-center gap-2 text-xs">
+            {/* View Mode Switcher */}
+            <div className="flex items-center bg-slate-100 dark:bg-slate-800 p-1 rounded-xl border border-slate-200 dark:border-slate-700">
+              <button
+                onClick={() => setViewMode('table')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition ${
+                  viewMode === 'table'
+                    ? 'bg-white dark:bg-slate-700 text-red-600 shadow-xs'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                }`}
+              >
+                <List className="w-3.5 h-3.5" />
+                <span>{isAr ? 'جدول المبيعات' : 'POS Table'}</span>
+              </button>
+
+              <button
+                onClick={() => setViewMode('map')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition ${
+                  viewMode === 'map'
+                    ? 'bg-white dark:bg-slate-700 text-red-600 shadow-xs'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                }`}
+              >
+                <MapPin className="w-3.5 h-3.5" />
+                <span>{isAr ? 'الخريطة التفاعلية' : 'GIS Map'}</span>
+              </button>
+            </div>
+
             <span className="px-3 py-1 bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 font-bold rounded-full">
-              17 / 17 Online
+              {branches.length} / {branches.length} Online
             </span>
           </div>
         </div>
 
-        <div className="mt-4 overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead>
-              <tr className="border-b border-slate-200 dark:border-slate-800 text-slate-400 uppercase text-[10px]">
-                <th className="py-3 px-3">{isAr ? 'الفرع والموقع' : 'Branch & Location'}</th>
-                <th className="py-3 px-3">{isAr ? 'الصيدلي المدير' : 'Duty Manager'}</th>
-                <th className="py-3 px-3">{isAr ? 'مبيعات اليوم' : "Today's Sales"}</th>
-                <th className="py-3 px-3">{isAr ? 'عدد الروشتات' : 'Rx Dispensed'}</th>
-                <th className="py-3 px-3">{isAr ? 'حالة السيرفر' : 'ERP Status'}</th>
-                <th className="py-3 px-3 text-right">{isAr ? 'الإجراء' : 'Action'}</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-              {branches.map((branch) => {
-                const isSelected = selectedBranchId === branch.id;
-                return (
-                  <tr
-                    key={branch.id}
-                    onClick={() => setSelectedBranchId(branch.id)}
-                    className={`hover:bg-slate-50 dark:hover:bg-slate-800/50 transition cursor-pointer ${
-                      isSelected ? 'bg-red-50/50 dark:bg-red-950/20' : ''
-                    }`}
-                  >
-                    <td className="py-3 px-3 font-semibold text-slate-900 dark:text-white">
-                      <div className="flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                        <div>
-                          <span>{isAr ? branch.nameAr : branch.name}</span>
-                          <span className="text-[10px] text-slate-400 block">{branch.city}</span>
+        {viewMode === 'map' ? (
+          <div className="mt-6">
+            <BranchMap
+              branches={branches}
+              lang={lang}
+              height="h-[550px]"
+            />
+          </div>
+        ) : (
+          <div className="mt-4 overflow-x-auto">
+            <table className="w-full text-left text-xs">
+              <thead>
+                <tr className="border-b border-slate-200 dark:border-slate-800 text-slate-400 uppercase text-[10px]">
+                  <th className="py-3 px-3">{isAr ? 'الفرع والموقع' : 'Branch & Location'}</th>
+                  <th className="py-3 px-3">{isAr ? 'الصيدلي المدير' : 'Duty Manager'}</th>
+                  <th className="py-3 px-3">{isAr ? 'مبيعات اليوم' : "Today's Sales"}</th>
+                  <th className="py-3 px-3">{isAr ? 'عدد الروشتات' : 'Rx Dispensed'}</th>
+                  <th className="py-3 px-3">{isAr ? 'حالة السيرفر' : 'ERP Status'}</th>
+                  <th className="py-3 px-3 text-right">{isAr ? 'الإجراء' : 'Action'}</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                {branches.map((branch) => {
+                  const isSelected = selectedBranchId === branch.id;
+                  return (
+                    <tr
+                      key={branch.id}
+                      onClick={() => setSelectedBranchId(branch.id)}
+                      className={`hover:bg-slate-50 dark:hover:bg-slate-800/50 transition cursor-pointer ${
+                        isSelected ? 'bg-red-50/50 dark:bg-red-950/20' : ''
+                      }`}
+                    >
+                      <td className="py-3 px-3 font-semibold text-slate-900 dark:text-white">
+                        <div className="flex items-center gap-2">
+                          <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                          <div>
+                            <span>{isAr ? branch.nameAr : branch.name}</span>
+                            <span className="text-[10px] text-slate-400 block">{branch.city}</span>
+                          </div>
                         </div>
-                      </div>
-                    </td>
-                    <td className="py-3 px-3 text-slate-600 dark:text-slate-300">
-                      {branch.manager}
-                    </td>
-                    <td className="py-3 px-3 font-mono font-bold text-slate-900 dark:text-white">
-                      {branch.todaySales}
-                    </td>
-                    <td className="py-3 px-3 text-slate-600 dark:text-slate-300 font-mono">
-                      {branch.rxDispensedToday}
-                    </td>
-                    <td className="py-3 px-3">
-                      <span className="px-2 py-0.5 text-[10px] font-bold rounded-md bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300">
-                        {branch.erpSyncStatus}
-                      </span>
-                    </td>
-                    <td className="py-3 px-3 text-right">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onOpenPowerBI();
-                        }}
-                        className="text-[11px] font-bold text-red-600 hover:text-red-700 flex items-center gap-1 ml-auto"
-                      >
-                        <span>{isAr ? 'فحص' : 'Inspect'}</span>
-                        <ArrowUpRight className="w-3 h-3" />
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+                      </td>
+                      <td className="py-3 px-3 text-slate-600 dark:text-slate-300">
+                        {branch.manager}
+                      </td>
+                      <td className="py-3 px-3 font-mono font-bold text-slate-900 dark:text-white">
+                        {branch.todaySales}
+                      </td>
+                      <td className="py-3 px-3 text-slate-600 dark:text-slate-300 font-mono">
+                        {branch.rxDispensedToday}
+                      </td>
+                      <td className="py-3 px-3">
+                        <span className="px-2 py-0.5 text-[10px] font-bold rounded-md bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300">
+                          {branch.erpSyncStatus}
+                        </span>
+                      </td>
+                      <td className="py-3 px-3 text-right">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onOpenPowerBI();
+                          }}
+                          className="text-[11px] font-bold text-red-600 hover:text-red-700 flex items-center gap-1 ml-auto"
+                        >
+                          <span>{isAr ? 'فحص' : 'Inspect'}</span>
+                          <ArrowUpRight className="w-3 h-3" />
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
 
       {/* Critical Low Stock & Narcotics Registers in 2 Columns */}

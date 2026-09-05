@@ -6,15 +6,14 @@ export type TabType =
   | 'corp' 
   | 'ecommerce' 
   | 'branch_ops' 
-  | 'omnichannel' 
-  | 'investment';
+  | 'omnichannel';
 
 export type UserRole = 
-  | 'super_admin'       // Dr. Mostafa (Full access to all systems, investment, finances)
+  | 'super_admin'       // Executive Board & General Leadership (مجلس الإدارة والإدارة العامة)
   | 'branch_manager'     // admin6 (Pharmasyst ERP, inventory, staff, POS)
   | 'clinical_pharmacist'// Rx verification, patient consultation, dispensing
   | 'inventory_manager'  // Stock audits, PO creation, low stock management
-  | 'investor_guest';    // Pitch deck, financial models, high-level overview
+  | 'operations_director'; // Multi-branch audit, cold chain oversight, delivery SLA
 
 export interface Product {
   id: string;
@@ -48,6 +47,10 @@ export interface Branch {
   address: string;
   addressAr: string;
   phone: string;
+  secondaryPhones?: string[];
+  landmark?: string;
+  landmarkAr?: string;
+  googleMapUrl?: string;
   hours: string;
   hoursAr: string;
   lat: number;
@@ -57,6 +60,42 @@ export interface Branch {
   status: 'active' | 'renovating' | 'planned';
   staffCount: number;
   monthlyVolume: number;
+}
+
+export interface CustomerReview {
+  id: string;
+  customerName: string;
+  customerNameAr: string;
+  avatarUrl?: string;
+  branchId: string;
+  branchName: string;
+  branchNameAr: string;
+  rating: number; // 1-5
+  date: string;
+  comment: string;
+  commentAr: string;
+  category: 'delivery' | 'service' | 'cold_chain' | 'cosmetics' | 'prescription';
+  verifiedPatient: boolean;
+  helpfulCount: number;
+}
+
+export interface CustomerAccount {
+  id: string;
+  name: string;
+  email: string;
+  avatarUrl?: string;
+  phone?: string;
+  verifiedWithGmail: boolean;
+  googleId?: string;
+  joinedDate: string;
+  loyaltyPoints: number;
+  savedAddresses: Array<{
+    id: string;
+    label: string;
+    address: string;
+    city: string;
+    isDefault: boolean;
+  }>;
 }
 
 export interface PrescriptionOrder {
@@ -126,3 +165,4 @@ export interface CustomerConversation {
   messages: ChatMessage[];
   internalNotes: string[];
 }
+
