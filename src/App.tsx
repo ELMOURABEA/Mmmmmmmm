@@ -7,12 +7,16 @@ import {
   Product, 
   Branch, 
   SystemNotification, 
-  CartItem 
+  CartItem,
+  CustomerAccount,
+  CustomerReview
 } from './types';
 import { 
   INITIAL_PRODUCTS, 
   INITIAL_BRANCHES, 
-  INITIAL_NOTIFICATIONS 
+  INITIAL_NOTIFICATIONS,
+  INITIAL_REVIEWS,
+  DEFAULT_CUSTOMER_ACCOUNT
 } from './data/mockData';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
@@ -24,7 +28,6 @@ import { CorpWebsiteTab } from './components/tabs/CorpWebsiteTab';
 import { ECommerceTab } from './components/tabs/ECommerceTab';
 import { BranchOpsTab } from './components/tabs/BranchOpsTab';
 import { OmniChannelTab } from './components/tabs/OmniChannelTab';
-import { InvestmentTab } from './components/tabs/InvestmentTab';
 
 // Modals
 import { RxUploadModal } from './components/modals/RxUploadModal';
@@ -33,10 +36,12 @@ import { PharmasystConnectModal } from './components/modals/PharmasystConnectMod
 import { LowStockEmailModal } from './components/modals/LowStockEmailModal';
 import { AuditReportModal } from './components/modals/AuditReportModal';
 import { PowerBIDashboardModal } from './components/modals/PowerBIDashboardModal';
+import { InstaPayModal } from './components/modals/InstaPayModal';
+import { CustomerAuthModal } from './components/modals/CustomerAuthModal';
 
 export default function App() {
   // Navigation & Preferences State
-  const [currentTab, setCurrentTab] = useState<TabType>('overview');
+  const [currentTab, setCurrentTab] = useState<TabType>('corp');
   const [lang, setLang] = useState<Language>('ar');
   const [theme, setTheme] = useState<ThemeMode>('light');
   const [userRole, setUserRole] = useState<UserRole>('super_admin');
@@ -45,6 +50,8 @@ export default function App() {
   const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS);
   const [branches, setBranches] = useState<Branch[]>(INITIAL_BRANCHES);
   const [notifications, setNotifications] = useState<SystemNotification[]>(INITIAL_NOTIFICATIONS);
+  const [reviews, setReviews] = useState<CustomerReview[]>(INITIAL_REVIEWS);
+  const [customerAccount, setCustomerAccount] = useState<CustomerAccount | null>(DEFAULT_CUSTOMER_ACCOUNT);
   const [cartItems, setCartItems] = useState<CartItem[]>([
     { product: INITIAL_PRODUCTS[0], quantity: 1 }
   ]);
@@ -57,6 +64,8 @@ export default function App() {
   const [auditModalOpen, setAuditModalOpen] = useState(false);
   const [powerBIModalOpen, setPowerBIModalOpen] = useState(false);
   const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
+  const [instaPayModalOpen, setInstaPayModalOpen] = useState(false);
+  const [customerAuthModalOpen, setCustomerAuthModalOpen] = useState(false);
 
   // Sync theme with DOM document
   useEffect(() => {
@@ -182,6 +191,22 @@ export default function App() {
     setNotifications((prev) => [newNotif, ...prev]);
   };
 
+  const handleAddReview = (newReview: CustomerReview) => {
+    setReviews((prev) => [newReview, ...prev]);
+    const newNotif: SystemNotification = {
+      id: `notif-rev-${Date.now()}`,
+      title: 'New Verified Patient Review',
+      titleAr: 'تم تسجيل تقييم عميل جديد موثق',
+      message: `${newReview.customerName} rated ${newReview.branchName} with ${newReview.rating} stars.`,
+      messageAr: `قام العميل ${newReview.customerNameAr || newReview.customerName} بتقييم فرع ${newReview.branchNameAr || newReview.branchName} بـ ${newReview.rating} نجوم.`,
+      type: 'sync_event',
+      timestamp: 'Just now',
+      read: false,
+      severity: 'info'
+    };
+    setNotifications((prev) => [newNotif, ...prev]);
+  };
+
   return (
     <div 
       dir={lang === 'ar' ? 'rtl' : 'ltr'} 
@@ -205,6 +230,9 @@ export default function App() {
         onOpenCart={() => setCartDrawerOpen(true)}
         onOpenLowStockEmail={() => setLowStockEmailModalOpen(true)}
         onOpenPharmasystModal={() => setPharmasystModalOpen(true)}
+        onOpenInstaPayModal={() => setInstaPayModalOpen(true)}
+        customerAccount={customerAccount}
+        onOpenCustomerAuth={() => setCustomerAuthModalOpen(true)}
       />
 
       {/* Main Content Area */}
@@ -215,6 +243,7 @@ export default function App() {
             onSelectTab={setCurrentTab}
             onOpenPowerBI={() => setPowerBIModalOpen(true)}
             onOpenPharmasystModal={() => setPharmasystModalOpen(true)}
+            onOpenInstaPayModal={() => setInstaPayModalOpen(true)}
           />
         )}
 
@@ -222,8 +251,13 @@ export default function App() {
           <CorpWebsiteTab
             lang={lang}
             branches={branches}
+            reviews={reviews}
+            onAddReview={handleAddReview}
             onOpenRxModal={() => setRxModalOpen(true)}
             onNavigateToEcom={() => setCurrentTab('ecommerce')}
+            onOpenInstaPayModal={() => setInstaPayModalOpen(true)}
+            customerAccount={customerAccount}
+            onOpenCustomerAuth={() => setCustomerAuthModalOpen(true)}
           />
         )}
 
@@ -258,13 +292,6 @@ export default function App() {
             onOpenRxModal={() => setRxModalOpen(true)}
           />
         )}
-
-        {currentTab === 'investment' && (
-          <InvestmentTab
-            lang={lang}
-            onOpenAuditModal={() => setAuditModalOpen(true)}
-          />
-        )}
       </main>
 
       {/* Corporate & Attribution Footer */}
@@ -273,6 +300,7 @@ export default function App() {
         onSelectTab={setCurrentTab}
         onOpenRxModal={() => setRxModalOpen(true)}
         onOpenPharmasystModal={() => setPharmasystModalOpen(true)}
+        onOpenInstaPayModal={() => setInstaPayModalOpen(true)}
       />
 
       {/* Shopping Cart Drawer */}
@@ -335,6 +363,20 @@ export default function App() {
         branches={branches}
         products={products}
         lang={lang}
+      />
+
+      <InstaPayModal
+        isOpen={instaPayModalOpen}
+        onClose={() => setInstaPayModalOpen(false)}
+        lang={lang}
+      />
+
+      <CustomerAuthModal
+        isOpen={customerAuthModalOpen}
+        onClose={() => setCustomerAuthModalOpen(false)}
+        lang={lang}
+        account={customerAccount}
+        onSaveAccount={setCustomerAccount}
       />
     </div>
   );
